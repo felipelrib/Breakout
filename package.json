@@ -1,5 +1,5 @@
 {
-  "name": "CG-TP1",
+  "name": "cg-tp1",
   "version": "1.0.0",
   "scripts": {
     "start": "serve"
