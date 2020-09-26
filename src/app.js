@@ -39,9 +39,6 @@ function init() {
     renderer.setSize(window.innerHeight - 20, window.innerHeight - 20)
     document.body.appendChild(renderer.domElement)
 
-    camera.position.set(0, 0, 1);
-    camera.lookAt(0, 0, 0);
-
     setVariables()
 
     animate()
@@ -50,7 +47,7 @@ function init() {
 function animate() {
     requestAnimationFrame(animate);
 
-    GameLogic.calculateFrame(ball, paddle, bricks, group, direction)
+    GameLogic.calculateFrame(ball, paddle, bricks, group, direction, camera)
 
     renderer.render(scene, camera)
 }
