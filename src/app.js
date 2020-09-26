@@ -13,6 +13,16 @@ let ball
 
 let direction
 
+function handleKeypress(event) {
+    let key = event.key.toLowerCase()
+    switch (key) {
+        case 'r':
+            scene.remove(...scene.children)
+            setVariables()
+            break
+    }
+}
+
 function setVariables() {
     group = new THREE.Group();
 
@@ -51,5 +61,7 @@ function animate() {
 
     renderer.render(scene, camera)
 }
+
+window.addEventListener("keypress", handleKeypress)
 
 export { init }
