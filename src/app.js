@@ -13,6 +13,7 @@ let ball
 
 let direction
 
+let gamePaused
 let gameFinished
 let animationId
 
@@ -36,6 +37,10 @@ function finishGame() {
     }
 }
 
+function toggleGamePause() {
+    gamePaused = !gamePaused
+}
+
 function handleKeypress(event) {
     let key = event.key.toLowerCase()
     switch (key) {
@@ -47,7 +52,12 @@ function handleKeypress(event) {
     }
 }
 
+function handleMouseClick(event) {
+    toggleGamePause()
+}
+
 function setVariables() {
+    gamePaused = true
     group = new THREE.Group();
 
     paddle = Drawer.drawPaddle()
@@ -81,11 +91,14 @@ function init() {
 function animate() {
     animationId = requestAnimationFrame(animate);
 
-    GameLogic.calculateFrame(ball, paddle, bricks, group, direction, camera)
+    if (!gamePaused) {
+        GameLogic.calculateFrame(ball, paddle, bricks, group, direction, camera)
+    }
 
     renderer.render(scene, camera)
 }
 
 window.addEventListener("keypress", handleKeypress)
+window.addEventListener("click", handleMouseClick)
 
 export { init }
