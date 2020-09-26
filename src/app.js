@@ -1,5 +1,6 @@
 import * as THREE from '../node_modules/three/build/three.module.js'
 import * as Drawer from './drawer.js'
+import * as GameLogic from './gamelogic.js'
 
 let scene
 let camera
@@ -9,6 +10,8 @@ let group
 let paddle
 let bricks
 let ball
+
+let direction
 
 function setVariables() {
     group = new THREE.Group();
@@ -22,6 +25,8 @@ function setVariables() {
 
     scene.add(ball)
     scene.add(group)
+
+    direction = GameLogic.generateDirection()
 
     renderer.render(scene, camera)
 }
@@ -39,11 +44,13 @@ function init() {
 
     setVariables()
 
-    // animate()
+    animate()
 }
 
 function animate() {
     requestAnimationFrame(animate);
+
+    GameLogic.calculateFrame(ball, paddle, bricks, group, direction)
 
     renderer.render(scene, camera)
 }
