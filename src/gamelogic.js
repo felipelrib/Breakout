@@ -9,6 +9,13 @@ function generateDirection() {
 }
 
 function calculateFrame(ball, paddle, bricks, group, direction) {
+    let ballRadius = ball.geometry.parameters.radius
+    if ((ball.position.x - ballRadius) <= -1 || (ball.position.x + ballRadius) >= 1) {
+        direction.x = -direction.x
+    }
+    if ((ball.position.y - ballRadius) <= -1 || (ball.position.y + ballRadius) >= 1) {
+        direction.y = -direction.y
+    }
     ball.position.x += direction.x
     ball.position.y += direction.y
 }
