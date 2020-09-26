@@ -105,7 +105,9 @@ function setVariables() {
     scene.add(group)
 
     ballDirection = GameLogic.generateBallDirection()
-    paddleDirection = GameLogic.getPaddleDirection(0)
+    paddleDirection = paddleDirection || GameLogic.getPaddleDirection()
+
+    GameLogic.resetPlayerInfo()
 
     renderer.render(scene, camera)
 }

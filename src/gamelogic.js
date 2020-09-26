@@ -16,6 +16,11 @@ function getPlayerInfo() {
     }
 }
 
+function resetPlayerInfo() {
+    playerLives = MAX_AMOUNT_BALLS
+    playerScore = 0
+}
+
 function generateBallDirection() {
     let xDirection = Math.random() * 2 - 1
     let yDirection = Math.sqrt(1 - Math.pow(xDirection, 2))
@@ -23,8 +28,13 @@ function generateBallDirection() {
 }
 
 function getPaddleDirection(xCursorPosition, gameWidth) {
-    let xPosition = (Math.min(xCursorPosition, gameWidth) / gameWidth) * 2 - 1
-    return new THREE.Vector2(xPosition, 0)
+    let xDirection
+    if (xCursorPosition === undefined) {
+        xDirection = 0
+    } else {
+        xDirection = (Math.min(xCursorPosition, gameWidth) / gameWidth) * 2 - 1
+    }
+    return new THREE.Vector2(xDirection, 0)
 }
 
 function calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirection, camera) {
@@ -89,4 +99,4 @@ function calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirect
     return events
 }
 
-export { generateBallDirection, getPaddleDirection, calculateFrame, getPlayerInfo }
+export { generateBallDirection, getPaddleDirection, calculateFrame, getPlayerInfo, resetPlayerInfo }
