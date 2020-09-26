@@ -37,12 +37,16 @@ function drawBall() {
 
 function drawBricks() {
     let bricks = []
+    let colors = [0x00ff00, 0xff8800, 0x0000ff]
     for (let i = 0; i < BRICK_ROWS_AMOUNT; i++) {
         for (let j = 0; j < BRICK_COLUMNS_AMOUNT; j++) {
-            let color = i === 0 ? 0x0000ff : (i < 5 ? 0xff8800 : 0x00ff00)
+            let hardness = i === 0 ? 2 : (i < 5 ? 1 : 0)
+            let color = colors[hardness]
             let material = new THREE.MeshBasicMaterial({color, side: THREE.DoubleSide});
             let geometry = new THREE.PlaneGeometry(BRICK_WIDTH, BRICK_HEIGHT);
             let brick = new THREE.Mesh(geometry, material);
+            brick.colors = colors
+            brick.hardness = hardness
             brick.position.x = (-1 + BRICK_WALL_PADDING + (BRICK_WIDTH / 2)) + (j * (BRICK_HORIZONTAL_PADDING + BRICK_WIDTH))
             brick.position.y = (1 - BRICK_WALL_PADDING) - (i * (BRICK_HEIGHT + BRICK_VERTICAL_PADDING))
             bricks.push(brick)

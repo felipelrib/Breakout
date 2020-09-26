@@ -67,11 +67,16 @@ function calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirect
     })
 
     if (intersection) {
-        if(bricks.includes(intersection.object))
-            playerScore++
-
+        // Only enters here if the intersection object is a brick
         if (intersection.object !== paddle) {
-            group.remove(intersection.object)
+            if (intersection.object.hardness === 0) {
+                group.remove(intersection.object)
+                playerScore++
+            } else {
+                intersection.object.hardness--;
+                let color = intersection.object.colors[intersection.object.hardness]
+                intersection.object.material.color.setHex(color)
+            }
         }
         let xDistanceThreshold = ballDirection.x * BALL_SPEED
         let yDistanceThreshold = ballDirection.y * BALL_SPEED
