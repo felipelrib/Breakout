@@ -1,7 +1,20 @@
 import * as THREE from '../node_modules/three/build/three.module.js'
 
 const DIRECTION_SPEED = 0.01
+const MAX_AMOUNT_BALLS = 5
+const PADDLE_MAX_SPEED = 2 
 const raycaster = new THREE.Raycaster()
+
+let playerLives = MAX_AMOUNT_BALLS
+let playerScore = 0
+
+// Returns score and remaining lives of player in a game
+function getPlayerInfo() {
+    return {
+        'playerLives': playerLives,
+        'playerScore': playerScore
+    }
+}
 
 function generateDirection() {
     let xDirection = Math.random() * 2 - 1
@@ -17,6 +30,10 @@ function calculateFrame(ball, paddle, bricks, group, direction, camera) {
         direction.x = -direction.x
     }
     if ((ball.position.y - ballRadius) <= -1 || (ball.position.y + ballRadius) >= 1) {
+        // If ball hit the lower edge of the scene
+        if(ball.position.y - ballRadius <= -1)
+            playerLives--
+
         direction.y = -direction.y
     }
 
@@ -29,6 +46,9 @@ function calculateFrame(ball, paddle, bricks, group, direction, camera) {
     })
 
     if (intersection) {
+        if(bricks.includes(intersection.object))
+            playerScore++
+
         if (intersection.object !== paddle) {
             group.remove(intersection.object)
         }
@@ -49,4 +69,4 @@ function calculateFrame(ball, paddle, bricks, group, direction, camera) {
     ball.position.y += direction.y * DIRECTION_SPEED
 }
 
-export { generateDirection, calculateFrame }
+export { generateDirection, calculateFrame, getPlayerInfo }

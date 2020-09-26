@@ -51,4 +51,4 @@ function drawBricks() {
     return bricks
 }
 
-export { drawPaddle, drawBall, drawBricks }
+export { drawPaddle, drawBall, drawBricks, BRICK_COLUMNS_AMOUNT, BRICK_ROWS_AMOUNT }

@@ -2,6 +2,9 @@ import * as THREE from '../node_modules/three/build/three.module.js'
 import * as Drawer from './drawer.js'
 import * as GameLogic from './gamelogic.js'
 
+const LEFT_MOUSE_BTN = 0
+const RIGHT_MOUSE_BTN = 2
+
 let scene
 let camera
 let renderer
@@ -53,7 +56,14 @@ function handleKeypress(event) {
 }
 
 function handleMouseClick(event) {
-    toggleGamePause()
+    let btn = event.button
+    switch (btn) {
+        case LEFT_MOUSE_BTN:
+            toggleGamePause()
+            break
+        case RIGHT_MOUSE_BTN:
+            break
+    }
 }
 
 function setVariables() {
@@ -91,14 +101,17 @@ function init() {
 function animate() {
     animationId = requestAnimationFrame(animate);
 
-    if (!gamePaused) {
+    let { playerScore, playerLives } = GameLogic.getPlayerInfo()
+    if (!gamePaused && playerLives > 0 && playerScore <= Drawer.BRICK_ROWS_AMOUNT * Drawer.BRICK_COLUMNS_AMOUNT) {
         GameLogic.calculateFrame(ball, paddle, bricks, group, direction, camera)
     }
 
     renderer.render(scene, camera)
 }
 
+
+window.addEventListener("contextmenu", e => e.preventDefault()) // For handling non-left clicks
 window.addEventListener("keypress", handleKeypress)
-window.addEventListener("click", handleMouseClick)
+window.addEventListener("mousedown", handleMouseClick)
 
 export { init }
