@@ -13,13 +13,37 @@ let ball
 
 let direction
 
+let gameFinished
+let animationId
+
+function restartGame() {
+    if (!gameFinished) {
+        scene.remove(...scene.children)
+        setVariables()
+    }
+}
+
+function finishGame() {
+    if (!gameFinished) {
+        cancelAnimationFrame(animationId);
+        renderer.forceContextLoss();
+        renderer.domElement = null;
+        renderer = null;
+        scene = null;
+        camera = null;
+        renderer = null;
+        gameFinished = true
+    }
+}
+
 function handleKeypress(event) {
     let key = event.key.toLowerCase()
     switch (key) {
         case 'r':
-            scene.remove(...scene.children)
-            setVariables()
+            restartGame()
             break
+        case 'q':
+            finishGame()
     }
 }
 
@@ -55,7 +79,7 @@ function init() {
 }
 
 function animate() {
-    requestAnimationFrame(animate);
+    animationId = requestAnimationFrame(animate);
 
     GameLogic.calculateFrame(ball, paddle, bricks, group, direction, camera)
 
