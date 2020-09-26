@@ -5,6 +5,10 @@ import * as GameLogic from './gamelogic.js'
 const LEFT_MOUSE_BTN = 0
 const RIGHT_MOUSE_BTN = 2
 
+// Make it square to prevent ball radius distortion.
+const RENDER_HEIGTH = window.innerHeight
+const RENDER_WIDTH = RENDER_HEIGTH
+
 let scene
 let camera
 let renderer
@@ -14,7 +18,8 @@ let paddle
 let bricks
 let ball
 
-let direction
+let ballDirection
+let paddleDirection
 
 let gamePaused
 let gameFinished
@@ -66,6 +71,10 @@ function handleMouseClick(event) {
     }
 }
 
+function handleMouseMove(event) {
+    paddleDirection = GameLogic.getPaddleDirection(event.clientX, RENDER_WIDTH)
+}
+
 function setVariables() {
     gamePaused = true
     group = new THREE.Group();
@@ -80,7 +89,8 @@ function setVariables() {
     scene.add(ball)
     scene.add(group)
 
-    direction = GameLogic.generateDirection()
+    ballDirection = GameLogic.generateBallDirection()
+    paddleDirection = GameLogic.getPaddleDirection(0)
 
     renderer.render(scene, camera)
 }
@@ -90,7 +100,7 @@ function init() {
     camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
     renderer = new THREE.WebGLRenderer()
 
-    renderer.setSize(window.innerHeight - 20, window.innerHeight - 20)
+    renderer.setSize(RENDER_WIDTH, RENDER_HEIGTH)
     document.body.appendChild(renderer.domElement)
 
     setVariables()
@@ -103,7 +113,7 @@ function animate() {
 
     let { playerScore, playerLives } = GameLogic.getPlayerInfo()
     if (!gamePaused && playerLives > 0 && playerScore <= Drawer.BRICK_ROWS_AMOUNT * Drawer.BRICK_COLUMNS_AMOUNT) {
-        GameLogic.calculateFrame(ball, paddle, bricks, group, direction, camera)
+        GameLogic.calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirection, camera)
     }
 
     renderer.render(scene, camera)
@@ -113,5 +123,6 @@ function animate() {
 window.addEventListener("contextmenu", e => e.preventDefault()) // For handling non-left clicks
 window.addEventListener("keypress", handleKeypress)
 window.addEventListener("mousedown", handleMouseClick)
+window.addEventListener("mousemove", handleMouseMove)
 
 export { init }
