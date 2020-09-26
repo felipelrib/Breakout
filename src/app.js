@@ -1,36 +1,51 @@
+import * as THREE from '../node_modules/three/build/three.module.js'
+import * as Drawer from './drawer.js'
+
 let scene
 let camera
 let renderer
-let geometry
-let material
-let cube
+
+let group
+let paddle
+let bricks
+let ball
+
+function setVariables() {
+    group = new THREE.Group();
+
+    paddle = Drawer.drawPaddle()
+    bricks = Drawer.drawBricks()
+    ball = Drawer.drawBall()
+
+    group.add(paddle)
+    bricks.forEach(brick => group.add(brick))
+
+    scene.add(ball)
+    scene.add(group)
+
+    renderer.render(scene, camera)
+}
 
 function init() {
     scene = new THREE.Scene()
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+    camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)
     renderer = new THREE.WebGLRenderer()
 
-    renderer.setSize( window.innerWidth, window.innerHeight )
-    document.body.appendChild( renderer.domElement )
+    renderer.setSize(window.innerHeight - 20, window.innerHeight - 20)
+    document.body.appendChild(renderer.domElement)
 
-    geometry = new THREE.BoxGeometry()
-    material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-    cube = new THREE.Mesh( geometry, material )
+    camera.position.set(0, 0, 1);
+    camera.lookAt(0, 0, 0);
 
-    scene.add( cube )
+    setVariables()
 
-    camera.position.z = 5
-
-    animate()
+    // animate()
 }
 
 function animate() {
     requestAnimationFrame(animate);
 
-    cube.rotation.x += 0.01
-    cube.rotation.y += 0.01
-
-    renderer.render( scene, camera )
+    renderer.render(scene, camera)
 }
 
 export { init }
