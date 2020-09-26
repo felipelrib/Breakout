@@ -32,13 +32,18 @@ function calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirect
     let paddleWidth = paddle.geometry.parameters.width
     let ballPosition = ball.position
     let intersection = null
+    let events = {
+        playerLostLife: false
+    }
     if ((ball.position.x - ballRadius) <= -1 || (ball.position.x + ballRadius) >= 1) {
         ballDirection.x = -ballDirection.x
     }
     if ((ball.position.y - ballRadius) <= -1 || (ball.position.y + ballRadius) >= 1) {
         // If ball hit the lower edge of the scene
-        if(ball.position.y - ballRadius <= -1)
+        if(ball.position.y - ballRadius <= -1) {
             playerLives--
+            events.playerLostLife = true
+        }
 
         ballDirection.y = -ballDirection.y
     }
@@ -80,6 +85,8 @@ function calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirect
     } else {
         paddle.position.x = Math.min(paddle.position.x + paddleDirection.x * PADDLE_MAX_SPEED, 1 - paddleWidth / 2)
     }
+
+    return events
 }
 
 export { generateBallDirection, getPaddleDirection, calculateFrame, getPlayerInfo }

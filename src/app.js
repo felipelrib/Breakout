@@ -75,6 +75,21 @@ function handleMouseMove(event) {
     paddleDirection = GameLogic.getPaddleDirection(event.clientX, RENDER_WIDTH)
 }
 
+function resetBallPosition() {
+    gamePaused = true
+
+    scene.remove(ball)
+    group.remove(paddle)
+
+    ball = Drawer.drawBall()
+    paddle = Drawer.drawPaddle()
+
+    scene.add(ball)
+    group.add(paddle)
+
+    ballDirection = GameLogic.generateBallDirection()
+}
+
 function setVariables() {
     gamePaused = true
     group = new THREE.Group();
@@ -110,10 +125,13 @@ function init() {
 
 function animate() {
     animationId = requestAnimationFrame(animate);
-
+    let events = {}
     let { playerScore, playerLives } = GameLogic.getPlayerInfo()
     if (!gamePaused && playerLives > 0 && playerScore <= Drawer.BRICK_ROWS_AMOUNT * Drawer.BRICK_COLUMNS_AMOUNT) {
-        GameLogic.calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirection, camera)
+        events = GameLogic.calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirection, camera)
+    }
+    if (events.playerLostLife) {
+        resetBallPosition()
     }
 
     renderer.render(scene, camera)
