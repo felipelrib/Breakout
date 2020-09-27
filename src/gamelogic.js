@@ -1,7 +1,8 @@
 import * as THREE from '../node_modules/three/build/three.module.js'
+// import { BRICK_COLUMNS_AMOUNT, BRICK_ROWS_AMOUNT } from './drawer'
 
 const BALL_SPEED = 0.01
-const PADDLE_MAX_SPEED = 0.02
+const PADDLE_MAX_SPEED = 0.055
 const MAX_AMOUNT_BALLS = 5
 const raycaster = new THREE.Raycaster()
 
@@ -43,7 +44,8 @@ function calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirect
     let ballPosition = ball.position
     let intersection = null
     let events = {
-        playerLostLife: false
+        playerLostLife: false,
+        playerScoreChanged: false
     }
     if ((ball.position.x - ballRadius) <= -1 || (ball.position.x + ballRadius) >= 1) {
         ballDirection.x = -ballDirection.x
@@ -71,6 +73,7 @@ function calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirect
         if (intersection.object !== paddle) {
             if (intersection.object.hardness === 0) {
                 group.remove(intersection.object)
+                events.playerScoreChanged = true
                 playerScore++
             } else {
                 intersection.object.hardness--;
@@ -91,9 +94,6 @@ function calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirect
         }
     }
 
-    ball.position.x += ballDirection.x * BALL_SPEED
-    ball.position.y += ballDirection.y * BALL_SPEED
-
     // Prevent the paddle to go over the wall.
     if (paddleDirection.x < 0) {
         paddle.position.x = Math.max(paddle.position.x + paddleDirection.x * PADDLE_MAX_SPEED, -1 + paddleWidth / 2)
@@ -101,7 +101,10 @@ function calculateFrame(ball, paddle, bricks, group, ballDirection, paddleDirect
         paddle.position.x = Math.min(paddle.position.x + paddleDirection.x * PADDLE_MAX_SPEED, 1 - paddleWidth / 2)
     }
 
+    ball.position.x += ballDirection.x * BALL_SPEED
+    ball.position.y += ballDirection.y * BALL_SPEED
+
     return events
 }
 
-export { generateBallDirection, getPaddleDirection, calculateFrame, getPlayerInfo, resetPlayerInfo }
+export { generateBallDirection, getPaddleDirection, calculateFrame, getPlayerInfo, resetPlayerInfo, PADDLE_MAX_SPEED, MAX_AMOUNT_BALLS }
